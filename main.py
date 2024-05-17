@@ -3,7 +3,7 @@
 # Name: Drew McGregor
 # Class: CS30
 # Assignment: Object-Orientated Programming: RPG - Classes
-# Version: 0
+# Version: 0.1
 #-----------------------------------------------------------------------------
 '''
    Here is the headers docString 
@@ -21,16 +21,18 @@ import user_inputs as u
 class Map:
     def __init__(self):
         self.layout = [['shaft', 'weak_stone', 'stone', 'stone'],
-          ['shaft', 'stone', 'gas_pockets', 'abandoned_shaft'], 
+          ['shaft', 'weak_stone', 'gas_pockets', 'abandoned_shaft'], 
           ['shaft', 'damp_cave', 'flooded_cave', 'crystal_cave']]
-        self.clearedrooms = [[True, False, False, False]] * 3
+        self.clearedrooms = [[True, False, False, False], 
+                            [True, False, False, False], 
+                            [True, False, False, False]]
         self.rooms = {'shaft': {'description': 'the mineshaft. '
                          + 'The shaft is the only place you can move vertically',
                          'dangers': [], 'tools': 'basic pickaxe', 'treasure': 0}, 
           'weak_stone': {'description': 'an area of weak stone. '
                          + 'You can mine through it with just a basic pickaxe. ',
                          'dangers': ['cave-in'], 'tools': 'basic pickaxe', 
-                         'treasure': 0}, 
+                         'treasure': 1}, 
           'stone': {'description': 'an area of hardened stone. '
                       + 'You can only mine through it with an upgraded pickaxe',
                       'dangers': [], 'tools': 'upgraded pickaxe', 'treasure': 1}, 
@@ -54,7 +56,7 @@ class Map:
                       + 'You will need scuba gear to pass '
                       + 'through it. ',
           'dangers': ['drowning'], 'tools': 'scuba gear', 'treasure': 2}}
-    
+
     def load(self):
         '''exports map as external file. final_msg = message print
         after function runs'''
@@ -85,7 +87,7 @@ class Player(Map):
         self.ypos = 0
         self.current_room = self.layout[self.ypos][self.xpos]
         self.movement_opts = []
-        self.treasure = 0
+        self.treasure = 500
         self.inventory = ['basic pickaxe']
 
     def __str__(self):
@@ -112,12 +114,12 @@ class Player(Map):
             pass
         try: 
              # Removing options that need correct tools. 
-            if m.rooms[current_room]['tools'] not in player['inventory']:
-                player['movement_options'].remove('right')
-                print('You need the correct tools to progress further')
+            if self.rooms[self.current_room]['tools'] not in self.inventory:
+                self.movement_opts.remove('right')
+                print('Your only option is back. You need the correct tools to progress further')
         except:
             pass
-    
+
     def mine(self):
         '''Checks whether room is cleared, if not adds rooms treasure
          to player treasure. '''
@@ -127,9 +129,10 @@ class Player(Map):
             if self.rooms[self.current_room]['tools'] in self.inventory:
                 self.treasure += self.rooms[self.current_room]['treasure']
                 self.clearedrooms[self.ypos][self.xpos] = True
+                print(f'You mine out the room and find {self.rooms[self.current_room]["treasure"]} treasure.')
+                print(self.clearedrooms)
             else:
-                print(f'''You need {self.rooms[self.layout[self.ypos]
-                [self.xpos]]['tools']} to clear this room. ''')
+                print(f'''You need {self.rooms[self.layout[self.ypos][self.xpos]]['tools']} to clear this room. ''')
 
     def move(self):
         '''Lets a user move the player around the map'''
@@ -149,20 +152,23 @@ class Player(Map):
         print(f"""You enter {self.rooms[self.current_room]['description']}""")
 
     def shop(self):
-        stock = ['upgraded pickaxe', 'scuba gear', 'cancel']
-        for item in self.inventory:
-            if item in stock:
-                stock.remove(item)
-        if len(stock) > 0:    
-            buying = u.offer_options(stock, 'What would you like to buy?', 'invalid input, please try again')
-            if buying == 'upgraded pickaxe' and self.treasure >= 3:
-                self.inventory.append(buying)
+        stock = ['upgraded pickaxe (3 treasure)', 'scuba gear (5 treasure)', 'cancel']
+        overlap = []
+        for item in stock:
+            if item[:-13] in self.inventory:
+                overlap.append(item)
+        for item in overlap:
+            stock.remove(item)
+        if len(stock)-1 > 0:    
+            buying = u.offer_options(stock, 'What would you like to buy? ', 'invalid input, please try again')
+            if buying == 'upgraded pickaxe (3 treasure)' and self.treasure >= 3:
+                self.inventory.append('upgraded pickaxe')
                 self.treasure -= 3
-            elif buying == 'scuba gear' and self.treasure >= 5:
-                self.inventory.append(buying)
+            elif buying == 'scuba gear (5 treasure)' and self.treasure >= 5:
+                self.inventory.append('scuba gear')
                 self.treasure -= 5
             elif buying == 'cancel':
-                print('please return again later')
+                print('Please return again later!')
             else:
                 print(f"You only have {self.treasure} treasure. You don't have enough treasure to buy {buying},  Check out the other items or come back when you can buy {buying}")
         else:
@@ -171,7 +177,7 @@ class Player(Map):
 player = Player()
 def main_options():
     '''offers player possible options'''
-    choice = u.offer_options(['move', 'mine', 'view_map'],
+    choice = u.offer_options(['move', 'mine', 'view_map', 'open shop'],
                            'What would you like to do? ',
                            "That's not a valid option, try again").lower()
     if choice == 'move':
@@ -180,6 +186,8 @@ def main_options():
         player.mine()
     elif choice == 'view_map':
         player.view()
+    elif choice == 'open shop':
+        player.shop()
 
 
 def main_menu():
@@ -190,9 +198,12 @@ def main_menu():
     while stop != '' or stop != 'q':
         if stop == '':
             print('game starting')
-            while True:
+            while player.xpos != 3 or player.ypos != 2:
                 print(player)
                 main_options()
+            else:
+                print('You win the game! Congrats!')
+                break
         elif stop == 'q':
             print('shutting down')
             break
@@ -200,7 +211,6 @@ def main_menu():
             print('invalid input, please try again')
             stop  = input('press enter to start or "q" to quit.')
             continue
-
 
 #-Main -----------------------------------------------------------------------
 main_menu()
