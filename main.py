@@ -3,7 +3,7 @@
 # Name: Drew McGregor
 # Class: CS30
 # Assignment: Object-Orientated Programming: RPG - Classes
-# Version: 0.2
+# Version: 0.3
 #-----------------------------------------------------------------------------
 '''
    Here is the headers docString 
@@ -11,6 +11,8 @@
 '''
 #-----------------------------------------------------------------------------
 #-Imports and Global Variables------------------------------------------------
+import random
+import rooms as r
 from tabulate import tabulate
 import user_inputs as u
 game_intro = '''Welcome to escape the mine. Find the passage out of the mine to win.'''
@@ -20,33 +22,12 @@ game_intro = '''Welcome to escape the mine. Find the passage out of the mine to 
 #-Main -----------------------------------------------------------------------
 class Map:
     def __init__(self):
-        self.layout = [['shaft', 'weak_stone', 'stone', 'stone'],
-          ['shaft', 'weak_stone', 'gas_pockets', 'abandoned_shaft'], 
-          ['shaft', 'damp_cave', 'flooded_cave', 'crystal_cave']]
+        self.layout = [[r.shaft, r.weak_stone, r.stone, r.stone],
+          [r.shaft, r.weak_stone, r.gas_pockets, r.abandoned_shaft], 
+          [r.shaft, r.damp_cave, r.flooded_cave, r.crystal_cave]]
         self.clearedrooms = [[True, False, False, False], 
                             [True, False, False, False], 
                             [True, False, False, False]]
-        self.rooms = {'shaft': {'description': 'the mineshaft. '
-                         + 'The shaft is the only place you can move vertically', 'tools': 'basic pickaxe', 'treasure': 0}, 
-          'weak_stone': {'description': 'an area of weak stone. '
-                         + 'You can mine through it with just a basic pickaxe. ', 'tools': 'basic pickaxe', 
-                         'treasure': 1}, 
-          'stone': {'description': 'an area of hardened stone. '
-                      + 'You can only mine through it with an upgraded pickaxe', 'tools': 'upgraded pickaxe', 'treasure': 1}, 
-          'gas_pockets': {'description': 'an area of weak stone. You can hear' +
-                        'a hissing from somewhere close. You can mine through the                       stone with just a basic pickaxe. ', 
-                        'tools': 'basic pickaxe', 'treasure': 1},
-          'abandoned_shaft': {'description': 'an old abandoned mineshaft. It appears deserted. ', 'tools': 'basic pickaxe', 'treasure': 3}, 
-          'damp_cave': {'description': 'dimly lit cave. '
-                  + 'There are puddles in low spots, '
-                  + 'stalagtites and stalagmites extend from '
-                  + 'the ceiling and floor. ', 'tools': 'basic pickaxe', 'treasure': 1},
-          'crystal_cave': {'description': 'a large cave with waist '
-                      + ' high water. Crystals grow from the '
-                      + 'ceilings and floors. ', 'tools': 'basic pickaxe', 'treasure': 3}, 
-          'flooded_cave': {'description': 'a flooded cave. '
-                      + 'You will need scuba gear to pass '
-                      + 'through it. ', 'tools': 'scuba gear', 'treasure': 2}}
 
     def load(self):
         '''exports map as external file. final_msg = message print
@@ -94,7 +75,7 @@ class Actions(Map):
             pass
         try: 
              # Removing options that need correct tools. 
-            if self.rooms[self.current_room]['tools'] not in self.inventory:
+            if self.current_room.tools not in self.inventory:
                 self.movement_opts.remove('right')
                 print('Your only option is back. You need the correct tools to progress further')
         except:
@@ -106,13 +87,13 @@ class Actions(Map):
         if self.clearedrooms[self.ypos][self.xpos]:
             print("There's nothing left to mine in this room")
         else:
-            if self.rooms[self.current_room]['tools'] in self.inventory:
-                self.treasure += self.rooms[self.current_room]['treasure']
+            if self.current_room.tools in self.inventory:
+                self.treasure += self.current_room.treasure
                 self.clearedrooms[self.ypos][self.xpos] = True
-                print(f'You mine out the room and find {self.rooms[self.current_room]["treasure"]} treasure.')
+                print(f'You mine out the room and find {self.current_room.treasure} treasure.')
                 print(self.clearedrooms)
             else:
-                print(f'''You need {self.rooms[self.layout[self.ypos][self.xpos]]['tools']} to clear this room. ''')
+                print(f'''You need {self.layout[self.ypos][self.xpos].tools} to clear this room. ''')
 
     def move(self):
         '''Lets a user move the player around the map'''
@@ -129,7 +110,7 @@ class Actions(Map):
         elif choice == 'left':
             self.xpos -= 1
         self.current_room = self.layout[self.ypos][self.xpos]
-        print(f"""You enter {self.rooms[self.current_room]['description']}""")
+        print(f"""You enter {self.current_room.description}""")
 
     def shop(self):
         stock = ['upgraded pickaxe (3 treasure)', 'scuba gear (5 treasure)', 'cancel']
@@ -162,7 +143,7 @@ class Player(Actions):
         self.ypos = 0
         self.current_room = self.layout[self.ypos][self.xpos]
         self.movement_opts = []
-        self.treasure = 500
+        self.treasure = 0
         self.inventory = ['basic pickaxe']
 
     def __str__(self):
@@ -189,6 +170,8 @@ def main_options():
 
 def main_menu():
     '''Essentially a main() function'''
+    winning_y = random.choice(range(len(player.layout)))
+    print(winning_y)
     print('MAIN MENU\n')
     player.load()
     stop  = input('press enter to start or "q" to quit.').lower()
@@ -196,11 +179,11 @@ def main_menu():
         if stop == '':
             print('game starting')
             print(game_intro)
-            while player.xpos != 3 or player.ypos != 2:
+            while player.xpos != 3 or player.ypos != winning_y:
                 print(player)
                 main_options()
             else:
-                print(" There's a dim pocket of sunight on the other end of the cave. \nYou win the game! Congrats!"")
+                print(" There's a dim pocket of sunight on the other end of the cave. \nYou win the game! Congrats!")
                 break
         elif stop == 'q':
             print('shutting down')

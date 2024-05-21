@@ -1,5 +1,5 @@
 +-------+------------+--------------+-----------------+
-| shaft | weak_stone | stone        | stone           |
-| shaft | weak_stone | gas_pockets  | abandoned_shaft |
-| shaft | damp_cave  | flooded_cave | crystal_cave    |
+| shaft | weak stone | stone        | stone           |
+| shaft | weak stone | gas pockets  | abandoned shaft |
+| shaft | damp_cave  | flooded cave | crystal cave    |
 +-------+------------+--------------+-----------------+
