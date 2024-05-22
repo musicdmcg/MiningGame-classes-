@@ -27,8 +27,9 @@ def get_choice(valid_inputs, msg, error_msg):
     choice = input(msg).lower()
     if choice == 'q':
         if get_YesNo('Are you sure you want to quit?', 
-                     'The only valid otions are yes or no'):
-            raise Exception('Game ended')
+                     'The only valid options are yes or no'):
+            print('shutting down')
+            exit()
         else:
             choice = get_choice(valid_inputs, msg, error_msg)
     if choice not in valid_inputs:

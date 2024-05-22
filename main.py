@@ -13,8 +13,8 @@
 #-Imports and Global Variables------------------------------------------------
 import random
 import rooms as r
-from tabulate import tabulate
 import user_inputs as u
+from tabulate import tabulate
 game_intro = '''Welcome to escape the mine. Find the passage out of the mine to win.'''
 #-Functions ------------------------------------------------------------------
 
@@ -52,10 +52,22 @@ class Map:
         finally:
             print('good luck')
 
-class Actions(Map):
+class Player(Map):
     def __init__(self):
         Map.__init__(self)
-        self.options = ['move', 'mine', 'view_map', 'open shop']
+        self.xpos = 0
+        self.ypos = 0
+        self.current_room = self.layout[self.ypos][self.xpos]
+        self.movement_opts = []
+        self.treasure = 0
+        self.inventory = ['basic pickaxe']
+        self.action_options = ['move', 'mine', 'view_map', 'open shop']
+
+    def __str__(self):
+        return f'''xpos: {self.xpos}
+                ypos: {self.ypos}
+                treasure: {self.treasure}
+                inventory: {self.inventory}'''
 
     def update_mvmt_options(self):
         '''Modifies player['movement_options'] assuming player is at xpos, ypos'''
@@ -77,7 +89,8 @@ class Actions(Map):
              # Removing options that need correct tools. 
             if self.current_room.tools not in self.inventory:
                 self.movement_opts.remove('right')
-                print('Your only option is back. You need the correct tools to progress further')
+                print('Your only option is back. You need the '
+                      + 'correct tools to progress further')
         except:
             pass
 
@@ -90,10 +103,12 @@ class Actions(Map):
             if self.current_room.tools in self.inventory:
                 self.treasure += self.current_room.treasure
                 self.clearedrooms[self.ypos][self.xpos] = True
-                print(f'You mine out the room and find {self.current_room.treasure} treasure.')
+                print(f'You mine out the room and find '
+                      + f'{self.current_room.treasure} treasure.')
                 print(self.clearedrooms)
             else:
-                print(f'''You need {self.layout[self.ypos][self.xpos].tools} to clear this room. ''')
+                print(f'You need {self.layout[self.ypos][self.xpos].tools}'
+                      + 'to clear this room. ')
 
     def move(self):
         '''Lets a user move the player around the map'''
@@ -113,7 +128,8 @@ class Actions(Map):
         print(f"""You enter {self.current_room.description}""")
 
     def shop(self):
-        stock = ['upgraded pickaxe (3 treasure)', 'scuba gear (5 treasure)', 'cancel']
+        stock = ['upgraded pickaxe (3 treasure)',
+                 'scuba gear (5 treasure)', 'cancel']
         overlap = []
         for item in stock:
             if item[:-13] in self.inventory:
@@ -121,8 +137,10 @@ class Actions(Map):
         for item in overlap:
             stock.remove(item)
         if len(stock)-1 > 0:    
-            buying = u.offer_options(stock, 'What would you like to buy? ', 'invalid input, please try again')
-            if buying == 'upgraded pickaxe (3 treasure)' and self.treasure >= 3:
+            buying = u.offer_options(stock, 'What would you like to buy? ',
+                                     'invalid input, please try again')
+            if buying == 'upgraded pickaxe (3 treasure)' and (self.treasure
+                                                              >= 3):
                 self.inventory.append('upgraded pickaxe')
                 self.treasure -= 3
             elif buying == 'scuba gear (5 treasure)' and self.treasure >= 5:
@@ -131,31 +149,17 @@ class Actions(Map):
             elif buying == 'cancel':
                 print('Please return again later!')
             else:
-                print(f"You only have {self.treasure} treasure. You don't have enough treasure to buy {buying},  Check out the other items or come back when you can buy {buying}")
+                print(f"""You only have {self.treasure} treasure. You don't
+                    have enough treasure to buy {buying},  Check out the
+                    other items or come back when you can buy {buying}""")
         else:
             print('Store out of stock. ')
 
 
-class Player(Actions):
-    def __init__(self):
-        Actions.__init__(self)
-        self.xpos = 0
-        self.ypos = 0
-        self.current_room = self.layout[self.ypos][self.xpos]
-        self.movement_opts = []
-        self.treasure = 0
-        self.inventory = ['basic pickaxe']
-
-    def __str__(self):
-        return f'''xpos: {self.xpos}
-                ypos: {self.ypos}
-                treasure: {self.treasure}
-                inventory: {self.inventory}'''
-######################################
 player = Player()
 def main_options():
     '''offers player possible options'''
-    choice = u.offer_options(player.options,
+    choice = u.offer_options(player.action_options,
                            'What would you like to do? ',
                            "That's not a valid option, try again").lower()
     if choice == 'move':
@@ -183,15 +187,14 @@ def main_menu():
                 print(player)
                 main_options()
             else:
-                print(" There's a dim pocket of sunight on the other end of the cave. \nYou win the game! Congrats!")
-                break
+                print(" There's a dim pocket of sunight on the other end "
+                      + "of the cave. \nYou win the game! Congrats!")
         elif stop == 'q':
             print('shutting down')
-            break
+            exit()
         else:
             print('invalid input, please try again')
             stop  = input('press enter to start or "q" to quit.')
             continue
-
 #-Main -----------------------------------------------------------------------
 main_menu()

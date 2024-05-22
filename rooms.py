@@ -15,7 +15,7 @@ weak_stone = Room('weak stone', 'basic pickaxe', 1, 'an area of weak stone. '
 
 stone = Room('stone', 'upgraded pickaxe', 1, 'an area of hardened stone. '
               + 'You can only mine through it with an upgraded pickaxe')
-gas_pockets = Room('gas pockets', 'basic_pickaxe', 1, 'an area of weak stone. You can hear' +
+gas_pockets = Room('gas pockets', 'basic pickaxe', 1, 'an area of weak stone. You can hear' +
                   'a hissing from somewhere close. You can mine through the stone with just a basic pickaxe. ')
 abandoned_shaft = Room('abandoned shaft', 'basic pickaxe', 3, 'an old abandoned mineshaft. It appears deserted. ')
 damp_cave = Room('damp_cave', 'basic pickaxe', 1, 'dimly lit cave. '
