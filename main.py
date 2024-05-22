@@ -3,11 +3,10 @@
 # Name: Drew McGregor
 # Class: CS30
 # Assignment: Object-Orientated Programming: RPG - Classes
-# Version: 0.3
+# Version: 0.4
 #-----------------------------------------------------------------------------
 '''
-   Here is the headers docString 
-   this is where you explain what the program does
+   Game with the goal of 'escaping the mine' Exit floor is is randomized.
 '''
 #-----------------------------------------------------------------------------
 #-Imports and Global Variables------------------------------------------------
@@ -64,10 +63,8 @@ class Player(Map):
         self.action_options = ['move', 'mine', 'view_map', 'open shop']
 
     def __str__(self):
-        return f'''xpos: {self.xpos}
-                ypos: {self.ypos}
-                treasure: {self.treasure}
-                inventory: {self.inventory}'''
+        return tabulate([['xpos', self.xpos], ['ypos', self.ypos], 
+    ['treasure', self.treasure], ['inventory', self.inventory]])
 
     def update_mvmt_options(self):
         '''Modifies player['movement_options'] assuming player is at xpos, ypos'''
@@ -85,14 +82,11 @@ class Player(Map):
                 self.movement_opts.remove('down')
         except:
             pass
-        try: 
-             # Removing options that need correct tools. 
-            if self.current_room.tools not in self.inventory:
-                self.movement_opts.remove('right')
-                print('Your only option is back. You need the '
-                      + 'correct tools to progress further')
-        except:
-            pass
+        # Removing progression option if missing required tools. 
+        if self.current_room.tools not in self.inventory:
+            self.movement_opts.remove('right')
+            print('Your only option is back. You need the '
+                  + 'correct tools to progress further')
 
     def mine(self):
         '''Checks whether room is cleared, if not adds rooms treasure
@@ -103,9 +97,8 @@ class Player(Map):
             if self.current_room.tools in self.inventory:
                 self.treasure += self.current_room.treasure
                 self.clearedrooms[self.ypos][self.xpos] = True
-                print(f'You mine out the room and find '
+                print('You mine out the room and find '
                       + f'{self.current_room.treasure} treasure.')
-                print(self.clearedrooms)
             else:
                 print(f'You need {self.layout[self.ypos][self.xpos].tools}'
                       + 'to clear this room. ')
@@ -125,11 +118,12 @@ class Player(Map):
         elif choice == 'left':
             self.xpos -= 1
         self.current_room = self.layout[self.ypos][self.xpos]
-        print(f"""You enter {self.current_room.description}""")
+        print(f'You enter {self.current_room.description}')
 
     def shop(self):
         stock = ['upgraded pickaxe (3 treasure)',
                  'scuba gear (5 treasure)', 'cancel']
+        # Removes item from store if player has it.
         overlap = []
         for item in stock:
             if item[:-13] in self.inventory:
@@ -175,7 +169,6 @@ def main_options():
 def main_menu():
     '''Essentially a main() function'''
     winning_y = random.choice(range(len(player.layout)))
-    print(winning_y)
     print('MAIN MENU\n')
     player.load()
     stop  = input('press enter to start or "q" to quit.').lower()
