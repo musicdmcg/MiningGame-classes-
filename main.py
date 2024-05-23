@@ -49,6 +49,7 @@ def main_menu():
             else:
                 print(" There's a dim pocket of sunight on the other end"
                       + " of the cave. \nYou win the game! Congrats!")
+                exit()
         elif stop == 'q':
             print('shutting down')
             exit()
