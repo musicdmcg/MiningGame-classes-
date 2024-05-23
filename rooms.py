@@ -32,5 +32,5 @@ damp_cave = Room('damp_cave', 'basic pickaxe', 1, 'dimly lit cave. '
 crystal_cave = Room('crystal cave', 'basic pickaxe', 3, 'a large cave with '
                     + 'waist high water. Crystals grow from the ceilings '
                     + 'and floors. ')
-flooded_cave = Room('flooded cave', 'scuba_gear', 2, 'a flooded cave. '
+flooded_cave = Room('flooded cave', 'scuba gear', 2, 'a flooded cave. '
                     + 'You will need scuba gear to pass through it. ')

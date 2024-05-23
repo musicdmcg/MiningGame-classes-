@@ -13,8 +13,8 @@
 import random
 import player as p
 import user_inputs as u
-game_intro = 'Welcome to escape the mine. Find the passage out of the mine'
-            + ' to win.'
+game_intro = ('Welcome to escape the mine. Find the passage out of the mine'
+            + ' to win.')
 player = p.Player()
 #-Functions ------------------------------------------------------------------
 #-Main -----------------------------------------------------------------------
