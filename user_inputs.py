@@ -2,7 +2,6 @@
 # Module: User Inputs
 #-----------------------------------------------------------------------------
 '''User input Functions'''
-# Imports and Global Variables------------------------------------------------
 #-Functions-------------------------------------------------------------------
 def get_YesNo(msg, error_msg):
     '''Asks user yes no question, outputs true for yes, false for no.
