@@ -3,7 +3,7 @@
 # Name: Drew McGregor
 # Class: CS30
 # Assignment: Object-Orientated Programming: RPG - Classes
-# Version: 0.4
+# Version: 0.5
 #-----------------------------------------------------------------------------
 '''
    Game with the goal of 'escaping the mine' Exit floor is is randomized.
@@ -17,7 +17,6 @@ game_intro = ('Welcome to escape the mine. Find the passage out of the mine'
             + ' to win.')
 player = p.Player()
 #-Functions ------------------------------------------------------------------
-#-Main -----------------------------------------------------------------------
 def main_options():
     '''offers player possible options'''
     choice = u.offer_options(player.action_options,
@@ -34,7 +33,7 @@ def main_options():
 
 
 def main_menu():
-    '''Essentially a main() function'''
+    '''Essentially a main() function, controls start and end of game'''
     winning_y = random.choice(range(len(player.layout)))
     print('MAIN MENU\n')
     player.load()
@@ -57,5 +56,7 @@ def main_menu():
             print('invalid input, please try again')
             stop  = input('press enter to start or "q" to quit.')
             continue
+
+
 #-Main -----------------------------------------------------------------------
 main_menu()

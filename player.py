@@ -7,7 +7,7 @@
 import map as m
 import user_inputs as u
 from tabulate import tabulate
-#-Main -----------------------------------------------------------------------
+#-Main------------------------------------------------------------------------
 class Player(m.Map):
     def __init__(self):
         m.Map.__init__(self)
@@ -24,7 +24,9 @@ class Player(m.Map):
     ['treasure', self.treasure], ['inventory', self.inventory]])
 
     def update_mvmt_options(self):
-        '''Updates player.movement_opts to players position'''
+        '''
+        Updates player.movement_opts with valid moves at players position
+        '''
         self.movement_opts.clear()
         if self.xpos == 0:
             self.movement_opts.extend(['up', 'down', 'right'])
@@ -61,7 +63,7 @@ class Player(m.Map):
                       + 'to clear this room. ')
 
     def move(self):
-        '''Lets a user move the player around the map'''
+        '''Lets user move the player around the map'''
         self.update_mvmt_options()
         choice = u.offer_options(self.movement_opts, 
                       'Where would you like to move? ', 
@@ -78,6 +80,7 @@ class Player(m.Map):
         print(f'You enter {self.current_room.description}')
 
     def shop(self):
+        '''Opens a shop menu and allows player to buy items in stock'''
         stock = ['upgraded pickaxe (3 treasure)',
                  'scuba gear (5 treasure)', 'cancel']
         # Removes item from store if player has it.
@@ -87,6 +90,7 @@ class Player(m.Map):
                 overlap.append(item)
         for item in overlap:
             stock.remove(item)
+        # Shopping menu. 
         if len(stock)-1 > 0:    
             buying = u.offer_options(stock, 'What would you like to buy? ',
                                      'invalid input, please try again')
@@ -100,8 +104,9 @@ class Player(m.Map):
             elif buying == 'cancel':
                 print('Please return again later!')
             else:
-                print(f"""You only have {self.treasure} treasure. You don't
-                    have enough treasure to buy {buying},  Check out the
-                    other items or come back when you can buy {buying}""")
+                print(f"You only have {self.treasure} treasure. You don't "
+                      + f"have enough treasure to buy {buying},  Check out "
+                      + "the other items or come back when you can buy "
+                      + f"{buying}")
         else:
             print('Store out of stock. ')

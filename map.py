@@ -17,6 +17,7 @@ class Map:
                             [True, False, False, False], 
                             [True, False, False, False]]
 
+
     def load(self):
         '''exports map as external file. final_msg = message print
         after function runs'''
@@ -24,9 +25,11 @@ class Map:
             with open('mining_map.txt', 'w') as m:
                 m.write(tabulate(self.layout, tablefmt = 'outline'))
         except:
-            print('The map failed to write. ')
+            print("You can't find your map, looks like you'll have to go "
+                + "without. ")
         else:
             print('map loaded')
+
 
     def view(self):
         '''attempts to print map'''
@@ -34,7 +37,8 @@ class Map:
             with open('mining_map.txt') as m:
                 print(m.read())
         except:
-            print('map failed to load')
+            print("You can't find your map, looks like you'll have to go "
+                + "without. ")
         else:
             print('you open your map')
         finally:
