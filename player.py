@@ -59,7 +59,7 @@ class Player(m.Map):
                 print('You mine out the room and find '
                       + f'{self.current_room.treasure} treasure.')
             else:
-                print(f'You need {self.layout[self.ypos][self.xpos].tools}'
+                print(f'You need {self.layout[self.ypos][self.xpos].tools} '
                       + 'to clear this room. ')
 
     def move(self):
