@@ -41,7 +41,7 @@ class Player(m.Map):
                 self.movement_opts.remove('down')
         except:
             pass
-        # Removing progression option if missing required tools. 
+        # Removes 'right' if missing required tools. 
         if self.current_room.tools not in self.inventory:
             self.movement_opts.remove('right')
             print('Your only option is back. You need the '

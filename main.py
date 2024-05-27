@@ -34,6 +34,7 @@ def main_options():
 
 def main_menu():
     '''Essentially a main() function, controls start and end of game'''
+    # y value of exit room is randomized, x stays constant as 3
     winning_y = random.choice(range(len(player.layout)))
     print('MAIN MENU\n')
     player.load()
