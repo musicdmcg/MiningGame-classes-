@@ -7,7 +7,7 @@
 import map as m
 import user_inputs as u
 from tabulate import tabulate
-#-Main------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 class Player(m.Map):
     def __init__(self):
         m.Map.__init__(self)

@@ -3,7 +3,7 @@
 # Name: Drew McGregor
 # Class: CS30
 # Assignment: Object-Orientated Programming: RPG - Classes
-# Version: 0.5
+# Version: 1
 #-----------------------------------------------------------------------------
 '''
    Game with the goal of 'escaping the mine' Exit floor is is randomized.
